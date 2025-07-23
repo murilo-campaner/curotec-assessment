@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -9,6 +10,7 @@ dotenv.config();
 import { errorHandler } from './middlewares/errorHandler';
 import { healthRoutes } from './routes/health';
 import { postRoutes } from './routes/posts';
+import { specs } from './swagger';
 
 // Criar aplicação Express
 const app = express();
@@ -22,6 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 // Rotas
 app.use('/api/health', healthRoutes);
 app.use('/api/posts', postRoutes);
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Curotec Posts API Documentation',
+}));
 
 // Rota raiz
 app.get('/', (_req, res) => {
