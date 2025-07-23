@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { postService } from '../services/postService';
-import { createPostSchema, updatePostSchema, searchPostsSchema, postIdSchema } from '../types/post';
 import { asyncHandler } from '../middlewares/errorHandler';
 
 export class PostController {
@@ -17,8 +16,7 @@ export class PostController {
 
   // GET /api/posts/search - Buscar posts com filtros
   searchPosts = asyncHandler(async (req: Request, res: Response) => {
-    const validatedParams = searchPostsSchema.parse(req.query);
-    const result = await postService.search(validatedParams);
+    const result = await postService.search(req.query as any);
 
     res.json({
       success: true,
@@ -28,8 +26,8 @@ export class PostController {
 
   // GET /api/posts/:id - Buscar post por ID
   getPostById = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = postIdSchema.parse(req.params);
-    const post = await postService.findById(id);
+    const { id } = req.params;
+    const post = await postService.findById(Number(id));
 
     res.json({
       success: true,
@@ -39,8 +37,7 @@ export class PostController {
 
   // POST /api/posts - Criar novo post
   createPost = asyncHandler(async (req: Request, res: Response) => {
-    const validatedData = createPostSchema.parse(req.body);
-    const post = await postService.create(validatedData);
+    const post = await postService.create(req.body);
 
     res.status(201).json({
       success: true,
@@ -51,9 +48,8 @@ export class PostController {
 
   // PUT /api/posts/:id - Atualizar post
   updatePost = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = postIdSchema.parse(req.params);
-    const validatedData = updatePostSchema.parse(req.body);
-    const post = await postService.update(id, validatedData);
+    const { id } = req.params;
+    const post = await postService.update(Number(id), req.body);
 
     res.json({
       success: true,
@@ -64,8 +60,8 @@ export class PostController {
 
   // DELETE /api/posts/:id - Deletar post
   deletePost = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = postIdSchema.parse(req.params);
-    await postService.delete(id);
+    const { id } = req.params;
+    await postService.delete(Number(id));
 
     res.json({
       success: true,
