@@ -168,7 +168,7 @@ cd frontend && npm run dev
 ```
 
 ### 7. Access the Application
-- **Frontend**: http://localhost:5173
+- **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3001
 - **API Docs**: http://localhost:3001/api-docs
 
