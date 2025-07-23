@@ -61,7 +61,7 @@ const Modal: React.FC<ModalProps> = ({
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">
-            {isEditing ? 'Editar Post' : 'Novo Post'}
+            {isEditing ? 'Edit Post' : 'New Post'}
           </h2>
           <button
             onClick={onClose}
@@ -74,7 +74,7 @@ const Modal: React.FC<ModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Título *
+              Title *
             </label>
             <input
               type="text"
@@ -84,13 +84,13 @@ const Modal: React.FC<ModalProps> = ({
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-              placeholder="Digite o título do post..."
+              placeholder="Enter the post title..."
             />
           </div>
 
           <div>
             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-              Conteúdo *
+              Content *
             </label>
             <textarea
               id="content"
@@ -100,7 +100,7 @@ const Modal: React.FC<ModalProps> = ({
               required
               rows={8}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-vertical"
-              placeholder="Digite o conteúdo do post..."
+              placeholder="Enter the post content..."
             />
           </div>
 
@@ -114,7 +114,7 @@ const Modal: React.FC<ModalProps> = ({
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="published" className="ml-2 block text-sm text-gray-700">
-              Publicar imediatamente
+              Publish immediately
             </label>
           </div>
 
@@ -124,14 +124,14 @@ const Modal: React.FC<ModalProps> = ({
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || !formData.title.trim() || !formData.content.trim()}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             >
-              {isLoading ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Criar')}
+              {isLoading ? 'Saving...' : (isEditing ? 'Update' : 'Create')}
             </button>
           </div>
         </form>

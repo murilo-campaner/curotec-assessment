@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Interceptor para tratamento de erros
+// Interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -20,36 +20,36 @@ api.interceptors.response.use(
 );
 
 export const postsApi = {
-  // Buscar todos os posts
+  // Get all posts
   async getAllPosts(): Promise<Post[]> {
     const response = await api.get<ApiResponse<Post[]>>('/posts');
     return response.data.data || [];
   },
 
-  // Buscar post por ID
+  // Get post by ID
   async getPostById(id: number): Promise<Post> {
     const response = await api.get<ApiResponse<Post>>(`/posts/${id}`);
     return response.data.data!;
   },
 
-  // Criar novo post
+  // Create new post
   async createPost(data: CreatePostData): Promise<Post> {
     const response = await api.post<ApiResponse<Post>>('/posts', data);
     return response.data.data!;
   },
 
-  // Atualizar post
+  // Update post
   async updatePost(id: number, data: UpdatePostData): Promise<Post> {
     const response = await api.put<ApiResponse<Post>>(`/posts/${id}`, data);
     return response.data.data!;
   },
 
-  // Deletar post
+  // Delete post
   async deletePost(id: number): Promise<void> {
     await api.delete<ApiResponse<void>>(`/posts/${id}`);
   },
 
-  // Buscar posts com filtros
+  // Search posts with filters
   async searchPosts(params: SearchParams): Promise<PaginatedResponse<Post>> {
     const response = await api.get<ApiResponse<PaginatedResponse<Post>>>('/posts/search', {
       params,
@@ -57,7 +57,7 @@ export const postsApi = {
     return response.data.data!;
   },
 
-  // Buscar posts publicados
+  // Get published posts
   async getPublishedPosts(): Promise<Post[]> {
     const response = await api.get<ApiResponse<Post[]>>('/posts', {
       params: { published: true },
@@ -65,7 +65,7 @@ export const postsApi = {
     return response.data.data || [];
   },
 
-  // Buscar posts não publicados
+  // Get draft posts
   async getDraftPosts(): Promise<Post[]> {
     const response = await api.get<ApiResponse<Post[]>>('/posts', {
       params: { published: false },

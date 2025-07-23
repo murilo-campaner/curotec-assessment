@@ -26,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
       <div className="text-sm text-gray-700">
-        Mostrando {startItem} a {endItem} de {totalItems} resultados
+        Showing {startItem} to {endItem} of {totalItems} results
       </div>
 
       <div className="flex items-center space-x-2">

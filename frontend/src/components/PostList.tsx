@@ -37,8 +37,8 @@ const PostList: React.FC<PostListProps> = ({
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Posts</h2>
         <div className="text-gray-500">
-          <p className="text-lg mb-2">Nenhum post encontrado</p>
-          <p className="text-sm">Crie seu primeiro post clicando em "New Post"</p>
+          <p className="text-lg mb-2">No posts found</p>
+          <p className="text-sm">Create your first post by clicking "New Post"</p>
         </div>
       </div>
     );

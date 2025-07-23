@@ -22,7 +22,7 @@ function BlogApp() {
   const queryClientInstance = useQueryClient();
   const itemsPerPage = 10;
 
-  // Query para buscar posts
+  // Query to fetch posts
   const {
     data: posts = [],
     isLoading,
@@ -32,7 +32,7 @@ function BlogApp() {
     queryFn: () => postsApi.getAllPosts(),
   });
 
-  // Filtrar posts baseado na busca e filtro de publicação
+  // Filter posts based on search and publication filter
   const filteredPosts = posts.filter((post) => {
     const matchesSearch = searchQuery === '' ||
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -43,7 +43,7 @@ function BlogApp() {
     return matchesSearch && matchesPublished;
   });
 
-  // Paginação
+  // Pagination
   const totalItems = filteredPosts.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -88,7 +88,7 @@ function BlogApp() {
   };
 
   const handleDeletePost = (postId: number) => {
-    if (confirm('Tem certeza que deseja excluir este post?')) {
+    if (confirm('Are you sure you want to delete this post?')) {
       deleteMutation.mutate(postId);
     }
   };
@@ -107,14 +107,14 @@ function BlogApp() {
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setCurrentPage(1); // Reset para primeira página ao buscar
+    setCurrentPage(1); // Reset to first page when searching
   };
 
   if (error) {
     return (
       <AppContainer>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Erro ao carregar posts</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error loading posts</h2>
           <p className="text-gray-600">{error.message}</p>
         </div>
       </AppContainer>

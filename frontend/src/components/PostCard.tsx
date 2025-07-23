@@ -10,7 +10,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -36,11 +36,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
             <span>{formatDate(post.createdAt)}</span>
             {post.published ? (
               <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                Publicado
+                Published
               </span>
             ) : (
               <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                Rascunho
+                Draft
               </span>
             )}
           </div>
@@ -50,14 +50,14 @@ const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
           <button
             onClick={() => onEdit(post)}
             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors duration-200"
-            title="Editar post"
+            title="Edit post"
           >
             <PencilIcon className="h-5 w-5" />
           </button>
           <button
             onClick={() => onDelete(post.id)}
             className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors duration-200"
-            title="Excluir post"
+            title="Delete post"
           >
             <TrashIcon className="h-5 w-5" />
           </button>
