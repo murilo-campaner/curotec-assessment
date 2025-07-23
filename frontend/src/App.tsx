@@ -6,6 +6,8 @@ import FilterBar from './components/FilterBar';
 import PostList from './components/PostList';
 import Pagination from './components/Pagination';
 import PostModal from './components/PostModal';
+import ConfirmDialog from './components/ConfirmDialog';
+import ErrorDisplay from './components/ErrorDisplay';
 import Footer from './components/Footer';
 import { usePosts } from './hooks/usePosts';
 import { usePostMutations } from './hooks/usePostMutations';
@@ -33,7 +35,10 @@ function BlogApp() {
   const {
     handleCreate,
     handleUpdate,
-    handleDelete,
+    handleDeleteClick,
+    handleDeleteConfirm,
+    handleDeleteCancel,
+    deleteConfirmation,
     isCreating,
     isUpdating,
   } = usePostMutations();
@@ -56,9 +61,13 @@ function BlogApp() {
   if (error) {
     return (
       <AppContainer>
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error loading posts</h2>
-          <p className="text-gray-600">{error.message}</p>
+        <div className="py-12">
+          <ErrorDisplay
+            error={error}
+            type="network"
+            onRetry={() => window.location.reload()}
+            className="max-w-2xl mx-auto"
+          />
         </div>
       </AppContainer>
     );
@@ -82,7 +91,7 @@ function BlogApp() {
       <PostList
         posts={posts}
         onEdit={handleEditPost}
-        onDelete={handleDelete}
+        onDelete={handleDeleteClick}
         isLoading={isLoading}
       />
 
@@ -102,6 +111,17 @@ function BlogApp() {
         onSubmit={handleModalSubmitWrapper}
         post={editingPost}
         isLoading={isCreating || isUpdating}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteConfirmation.isOpen}
+        title="Delete Post"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
       />
 
       <Footer />

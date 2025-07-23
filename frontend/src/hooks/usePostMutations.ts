@@ -1,6 +1,12 @@
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postsApi } from '../services/postsApi';
 import type { CreatePostData, UpdatePostData } from '../types/post';
+
+export interface DeleteConfirmation {
+  isOpen: boolean;
+  postId: number | null;
+}
 
 export const usePostMutations = () => {
   const queryClient = useQueryClient();
@@ -30,6 +36,12 @@ export const usePostMutations = () => {
     },
   });
 
+  // Delete confirmation state
+  const [deleteConfirmation, setDeleteConfirmation] = useState<DeleteConfirmation>({
+    isOpen: false,
+    postId: null,
+  });
+
   // Handlers
   const handleCreate = (data: CreatePostData) => {
     createMutation.mutate(data);
@@ -39,13 +51,22 @@ export const usePostMutations = () => {
     updateMutation.mutate({ id, data });
   };
 
-  const handleDelete = (postId: number) => {
-    if (confirm('Are you sure you want to delete this post?')) {
-      deleteMutation.mutate(postId);
+  const handleDeleteClick = (postId: number) => {
+    setDeleteConfirmation({ isOpen: true, postId });
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteConfirmation.postId) {
+      deleteMutation.mutate(deleteConfirmation.postId);
+      setDeleteConfirmation({ isOpen: false, postId: null });
     }
   };
 
-  return {
+  const handleDeleteCancel = () => {
+    setDeleteConfirmation({ isOpen: false, postId: null });
+  };
+
+    return {
     // Mutations
     createMutation,
     updateMutation,
@@ -57,9 +78,14 @@ export const usePostMutations = () => {
     isDeleting: deleteMutation.isPending,
     isAnyLoading: createMutation.isPending || updateMutation.isPending || deleteMutation.isPending,
 
+    // Delete confirmation
+    deleteConfirmation,
+
     // Handlers
     handleCreate,
     handleUpdate,
-    handleDelete,
+    handleDeleteClick,
+    handleDeleteConfirm,
+    handleDeleteCancel,
   };
 };
