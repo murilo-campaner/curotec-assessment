@@ -8,10 +8,7 @@ cmds = ["npm install"]
 cmds = ["npm run build", "npm run prisma:generate"]
 
 [start]
-cmd = "npm start"
-
-[postdeploy]
-cmd = "./scripts/postdeploy.sh"
+cmd = "chmod +x scripts/check-env.sh && ./scripts/check-env.sh && npm run prisma:migrate && npm run prisma:seed && npm start"
 
 [variables]
 NODE_ENV = "production"
