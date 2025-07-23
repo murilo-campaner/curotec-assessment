@@ -4,6 +4,14 @@
 
 Como este é um **monorepo**, o Railway não consegue detectar automaticamente os serviços. Siga estas instruções:
 
+### 🚨 Erro Comum: "Docker build failed" ou "Nixpacks build failed"
+
+Se você vê esse erro, significa que tentou fazer deploy da **raiz** do projeto. A solução é:
+
+1. **Delete o projeto atual** no Railway
+2. **Crie um novo projeto** (sem conectar GitHub repo)
+3. **Crie os serviços separadamente** com Root Directory correto
+
 ## 🚀 Deploy Passo a Passo
 
 ### 1. Criar Projeto no Railway
@@ -12,6 +20,7 @@ Como este é um **monorepo**, o Railway não consegue detectar automaticamente o
 2. Faça login com GitHub
 3. Clique em "New Project"
 4. **NÃO** selecione "Deploy from GitHub repo" ainda
+5. **IMPORTANTE**: Se você já tentou deploy da raiz e deu erro, delete o projeto e crie um novo
 
 ### 2. Criar Backend Service
 
@@ -125,6 +134,12 @@ curl https://curotec-frontend.railway.app
 ### Erro: "Nixpacks build failed"
 - ✅ **Solução**: Use Root Directory correto (`backend/` ou `frontend/`)
 - ❌ **Erro**: Tentar deploy da raiz do projeto
+- 🔄 **Se persistir**: Delete o projeto e crie um novo
+
+### Erro: "Docker build failed"
+- ✅ **Solução**: Use Root Directory correto (`backend/` ou `frontend/`)
+- ❌ **Erro**: Tentar deploy da raiz do projeto
+- 🔄 **Se persistir**: Delete o projeto e crie um novo
 
 ### Erro: "Database connection failed"
 - Verifique se `DATABASE_URL` está correto

@@ -1,0 +1,22 @@
+# Ignorar arquivos da raiz no Railway
+# Os serviços devem ser deployados separadamente
+
+# Arquivos de configuração
+railway.json
+.railwayignore
+DEPLOY.md
+RAILWAY_DEPLOY.md
+TASKS.MD
+README.md
+env.example
+docker-compose.yml
+
+# Diretórios
+.github/
+docs/
+scripts/
+init.sql/
+
+# Git
+.git/
+.gitignore
