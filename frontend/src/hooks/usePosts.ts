@@ -23,8 +23,10 @@ export const usePosts = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['posts', searchQuery, publishedFilter, currentPage],
+    queryKey: ['posts', 'all'],
     queryFn: () => postsApi.getAllPosts(),
+    staleTime: 2 * 60 * 1000, // 2 minutes for posts data
+    gcTime: 5 * 60 * 1000, // 5 minutes cache
   });
 
   // Filter posts using utility function
