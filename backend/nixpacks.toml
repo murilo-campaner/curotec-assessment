@@ -10,5 +10,8 @@ cmds = ["npm run build", "npm run prisma:generate"]
 [start]
 cmd = "npm start"
 
+[postdeploy]
+cmd = "./scripts/postdeploy.sh"
+
 [variables]
 NODE_ENV = "production"
