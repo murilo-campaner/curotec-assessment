@@ -1,4 +1,4 @@
-name: Deploy to Railway
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,14 +6,10 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
 jobs:
-  deploy-backend:
-    name: Deploy Backend
+  test-backend:
+    name: Test Backend
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -38,18 +34,9 @@ jobs:
         working-directory: ./backend
         run: npm run build
 
-      - name: Deploy to Railway (Backend)
-        run: |
-          cd backend
-          echo "Deploying backend to Railway..."
-          # Note: Manual deployment required for monorepo
-          # Use Railway CLI or dashboard for deployment
-
-  deploy-frontend:
-    name: Deploy Frontend
+  test-frontend:
+    name: Test Frontend
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs: deploy-backend
 
     steps:
       - name: Checkout code
@@ -70,52 +57,34 @@ jobs:
         working-directory: ./frontend
         run: npm run test:run
 
+      - name: Run linting
+        working-directory: ./frontend
+        run: npm run lint
+
       - name: Build application
         working-directory: ./frontend
         run: npm run build
 
-      - name: Deploy to Railway (Frontend)
-        run: |
-          cd frontend
-          echo "Deploying frontend to Railway..."
-          # Note: Manual deployment required for monorepo
-          # Use Railway CLI or dashboard for deployment
-
-  test:
-    name: Run Tests
+  deploy-notification:
+    name: Deploy Notification
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [test-backend, test-frontend]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: npm ci
-
-      - name: Run backend tests
-        working-directory: ./backend
-        run: npm test
-
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: npm ci
-
-      - name: Run frontend tests
-        working-directory: ./frontend
-        run: npm run test:run
-
-      - name: Run linting
-        working-directory: ./backend
-        run: npm run lint
-
-      - name: Run frontend linting
-        working-directory: ./frontend
-        run: npm run lint
+      - name: Deploy Reminder
+        run: |
+          echo "🚀 Tests passed! Ready for deployment."
+          echo ""
+          echo "📋 Next steps for Railway deployment:"
+          echo "1. Go to Railway Dashboard"
+          echo "2. Deploy backend service (Root Directory: backend)"
+          echo "3. Deploy frontend service (Root Directory: frontend)"
+          echo "4. Configure environment variables"
+          echo "5. Run database migrations"
+          echo ""
+          echo "📚 See RAILWAY_DEPLOY.md for detailed instructions"
+          echo "🔧 Or use: ./scripts/deploy.sh all"
