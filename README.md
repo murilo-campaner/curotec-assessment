@@ -2,7 +2,7 @@
 
 > **Senior Software Engineer Assessment** - A demonstration of modern software engineering practices, AI-assisted development, and production-ready code quality.
 
-## �� Project Overview
+## Project Overview
 
 This project demonstrates my approach to **product engineering** - building robust, scalable applications using cutting-edge tools while maintaining high code quality and security standards. As a senior engineer, I believe in leveraging AI tools to accelerate development without compromising on architecture, testing, or maintainability.
 
