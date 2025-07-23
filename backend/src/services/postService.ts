@@ -143,6 +143,7 @@ export class PostService {
         },
       };
     } catch (error) {
+      console.error('Search error:', error);
       throw createError('Error searching posts', 500);
     }
   }

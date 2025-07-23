@@ -47,7 +47,7 @@ export const searchPostsSchema = z.object({
   order: z.enum(['asc', 'desc'], {
     errorMap: () => ({ message: 'Order must be asc or desc' })
   }).default('desc'),
-  published: z.coerce.boolean().optional(),
+  published: z.enum(['true', 'false']).transform(val => val === 'true').optional(),
   filter: z.enum(['all', 'published', 'draft']).optional(),
 });
 

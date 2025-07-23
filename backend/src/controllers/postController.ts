@@ -16,6 +16,7 @@ export class PostController {
 
   // GET /api/posts/search - Buscar posts com filtros
   searchPosts = asyncHandler(async (req: Request, res: Response) => {
+    console.log('Search query:', req.query);
     const result = await postService.search(req.query as any);
 
     res.json({
