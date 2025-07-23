@@ -3,11 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import { postsApi } from '../services/postsApi';
 import { filterPosts } from '../utils/filters';
 import { paginateItems } from '../utils/pagination';
+import type { FilterOption } from '../components/FilterBar';
 
 export const usePosts = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [publishedFilter, setPublishedFilter] = useState<boolean | undefined>(undefined);
+  const [activeFilter, setActiveFilter] = useState<FilterOption>('all');
+
+  // Convert FilterOption to boolean | undefined for the filter utility
+  const publishedFilter = activeFilter === 'all'
+    ? undefined
+    : activeFilter === 'published';
 
   const itemsPerPage = 10;
 
@@ -45,12 +51,12 @@ export const usePosts = () => {
     setCurrentPage(page);
   };
 
-  const handleFilterChange = (filter: boolean | undefined) => {
-    setPublishedFilter(filter);
+  const handleFilterChange = (filter: FilterOption) => {
+    setActiveFilter(filter);
     setCurrentPage(1); // Reset to first page when filtering
   };
 
-  return {
+    return {
     // Data
     posts: paginatedPosts,
     allPosts: posts,
@@ -60,7 +66,7 @@ export const usePosts = () => {
     // State
     searchQuery,
     currentPage,
-    publishedFilter,
+    activeFilter,
 
     // Pagination
     totalItems,

@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppContainer from './components/AppContainer';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
+import FilterBar from './components/FilterBar';
 import PostList from './components/PostList';
 import Pagination from './components/Pagination';
 import PostModal from './components/PostModal';
@@ -20,11 +21,13 @@ function BlogApp() {
     error,
     searchQuery,
     currentPage,
+    activeFilter,
     totalItems,
     totalPages,
     itemsPerPage,
     handleSearchChange,
     handlePageChange,
+    handleFilterChange,
   } = usePosts();
 
   const {
@@ -68,6 +71,12 @@ function BlogApp() {
       <SearchBar
         value={searchQuery}
         onChange={handleSearchChange}
+      />
+
+      <FilterBar
+        activeFilter={activeFilter}
+        onFilterChange={handleFilterChange}
+        className="mb-6"
       />
 
       <PostList
