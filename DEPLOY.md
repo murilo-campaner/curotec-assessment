@@ -17,10 +17,32 @@ Este guia explica como fazer deploy do projeto Curotec no Railway.
 3. Clique em "New Project"
 4. Selecione "Deploy from GitHub repo"
 5. Escolha o repositório `curotec`
+6. **IMPORTANTE**: Não faça deploy da raiz, vamos configurar os serviços separadamente
 
 ### 2. Configurar Serviços
 
-O Railway detectará automaticamente os serviços baseado nos arquivos `railway.toml`:
+**IMPORTANTE**: Como é um monorepo, precisamos criar os serviços manualmente:
+
+#### Passo 1: Criar Backend Service
+1. No projeto Railway, clique em "New Service"
+2. Selecione "GitHub Repo"
+3. Escolha o repositório `curotec`
+4. **Root Directory**: `backend`
+5. **Branch**: `main`
+6. Nome: `curotec-backend`
+
+#### Passo 2: Criar Frontend Service
+1. Clique em "New Service" novamente
+2. Selecione "GitHub Repo"
+3. Escolha o repositório `curotec`
+4. **Root Directory**: `frontend`
+5. **Branch**: `main`
+6. Nome: `curotec-frontend`
+
+#### Passo 3: Criar Database Service
+1. Clique em "New Service"
+2. Selecione "Database" > "PostgreSQL"
+3. Nome: `curotec-database`
 
 #### Backend Service
 - **Nome**: `curotec-backend`
