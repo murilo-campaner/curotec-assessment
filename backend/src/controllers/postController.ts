@@ -44,7 +44,7 @@ export class PostController {
 
     res.status(201).json({
       success: true,
-      message: 'Post criado com sucesso',
+      message: 'Post created successfully',
       data: post,
     });
   });
@@ -57,7 +57,7 @@ export class PostController {
 
     res.json({
       success: true,
-      message: 'Post atualizado com sucesso',
+      message: 'Post updated successfully',
       data: post,
     });
   });
@@ -69,7 +69,7 @@ export class PostController {
 
     res.json({
       success: true,
-      message: 'Post deletado com sucesso',
+      message: 'Post deleted successfully',
     });
   });
 

@@ -12,7 +12,7 @@ export class PostService {
         orderBy: { createdAt: 'desc' },
       });
     } catch (error) {
-      throw createError('Erro ao buscar posts', 500);
+      throw createError('Error fetching posts', 500);
     }
   }
 
@@ -24,7 +24,7 @@ export class PostService {
       });
 
       if (!post) {
-        throw createError('Post não encontrado', 404);
+        throw createError('Post not found', 404);
       }
 
       return post;
@@ -32,7 +32,7 @@ export class PostService {
       if (error instanceof Error && 'statusCode' in error) {
         throw error;
       }
-      throw createError('Erro ao buscar post', 500);
+      throw createError('Error fetching post', 500);
     }
   }
 
@@ -43,7 +43,7 @@ export class PostService {
         data,
       });
     } catch (error) {
-      throw createError('Erro ao criar post', 500);
+      throw createError('Error creating post', 500);
     }
   }
 
@@ -55,7 +55,7 @@ export class PostService {
       });
 
       if (!post) {
-        throw createError('Post não encontrado', 404);
+        throw createError('Post not found', 404);
       }
 
       // Filtrar apenas campos que foram fornecidos
@@ -72,7 +72,7 @@ export class PostService {
       if (error instanceof Error && 'statusCode' in error) {
         throw error;
       }
-      throw createError('Erro ao atualizar post', 500);
+      throw createError('Error updating post', 500);
     }
   }
 
@@ -84,7 +84,7 @@ export class PostService {
       });
 
       if (!post) {
-        throw createError('Post não encontrado', 404);
+        throw createError('Post not found', 404);
       }
 
       await prisma.post.delete({
@@ -94,7 +94,7 @@ export class PostService {
       if (error instanceof Error && 'statusCode' in error) {
         throw error;
       }
-      throw createError('Erro ao deletar post', 500);
+      throw createError('Error deleting post', 500);
     }
   }
 
@@ -143,7 +143,7 @@ export class PostService {
         },
       };
     } catch (error) {
-      throw createError('Erro ao buscar posts', 500);
+      throw createError('Error searching posts', 500);
     }
   }
 
@@ -154,7 +154,7 @@ export class PostService {
         where: { published: true },
       });
     } catch (error) {
-      throw createError('Erro ao contar posts publicados', 500);
+      throw createError('Error counting published posts', 500);
     }
   }
 
@@ -165,7 +165,7 @@ export class PostService {
         where: { published: false },
       });
     } catch (error) {
-      throw createError('Erro ao contar rascunhos', 500);
+      throw createError('Error counting drafts', 500);
     }
   }
 }

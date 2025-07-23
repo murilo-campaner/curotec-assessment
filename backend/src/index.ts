@@ -46,20 +46,20 @@ app.use(errorHandler);
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Rota não encontrada',
+    message: 'Route not found',
     path: req.originalUrl
   });
 });
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
   console.log(`📝 Posts API: http://localhost:${PORT}/api/posts`);
   console.log(`🔍 Search API: http://localhost:${PORT}/api/posts/search`);
   console.log(`📈 Stats API: http://localhost:${PORT}/api/posts/stats`);
   console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
-  console.log(`⏰ Iniciado em: ${new Date().toISOString()}`);
+  console.log(`⏰ Started at: ${new Date().toISOString()}`);
 });
 
 // Tratamento de erros não capturados
