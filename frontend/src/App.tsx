@@ -7,6 +7,7 @@ import SearchBar from './components/SearchBar';
 import PostList from './components/PostList';
 import Pagination from './components/Pagination';
 import Modal from './components/Modal';
+import Footer from './components/Footer';
 import { postsApi } from './services/postsApi';
 import type { Post, CreatePostData, UpdatePostData } from './types/post';
 
@@ -157,6 +158,8 @@ function BlogApp() {
         post={editingPost}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
+
+      <Footer />
     </AppContainer>
   );
 }
