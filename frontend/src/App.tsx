@@ -1,106 +1,170 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import { PostList } from './components/PostList';
-import { PostForm } from './components/PostForm';
-import { PostView } from './components/PostView';
-import type { Post } from './types/post';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import AppContainer from './components/AppContainer';
+import Header from './components/Header';
+import SearchBar from './components/SearchBar';
+import PostList from './components/PostList';
+import Pagination from './components/Pagination';
+import Modal from './components/Modal';
+import { postsApi } from './services/postsApi';
+import type { Post, CreatePostData, UpdatePostData } from './types/post';
 
-// Criar cliente do React Query
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutos
-      retry: 1,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-function App() {
-  const [showForm, setShowForm] = useState(false);
-  const [showView, setShowView] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+function BlogApp() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [publishedFilter, setPublishedFilter] = useState<boolean | undefined>(undefined);
 
-  const handleCreatePost = () => {
+  const queryClientInstance = useQueryClient();
+  const itemsPerPage = 10;
+
+  // Query para buscar posts
+  const {
+    data: posts = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['posts', searchQuery, publishedFilter, currentPage],
+    queryFn: () => postsApi.getAllPosts(),
+  });
+
+  // Filtrar posts baseado na busca e filtro de publicação
+  const filteredPosts = posts.filter((post) => {
+    const matchesSearch = searchQuery === '' ||
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.content.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesPublished = publishedFilter === undefined || post.published === publishedFilter;
+
+    return matchesSearch && matchesPublished;
+  });
+
+  // Paginação
+  const totalItems = filteredPosts.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + itemsPerPage);
+
+  // Mutations
+  const createMutation = useMutation({
+    mutationFn: postsApi.createPost,
+    onSuccess: () => {
+      queryClientInstance.invalidateQueries({ queryKey: ['posts'] });
+      setIsModalOpen(false);
+      setEditingPost(null);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: UpdatePostData }) =>
+      postsApi.updatePost(id, data),
+    onSuccess: () => {
+      queryClientInstance.invalidateQueries({ queryKey: ['posts'] });
+      setIsModalOpen(false);
+      setEditingPost(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: postsApi.deletePost,
+    onSuccess: () => {
+      queryClientInstance.invalidateQueries({ queryKey: ['posts'] });
+    },
+  });
+
+  // Handlers
+  const handleNewPost = () => {
     setEditingPost(null);
-    setShowForm(true);
+    setIsModalOpen(true);
   };
 
   const handleEditPost = (post: Post) => {
     setEditingPost(post);
-    setShowForm(true);
+    setIsModalOpen(true);
   };
 
-  const handleViewPost = (post: Post) => {
-    setSelectedPost(post);
-    setShowView(true);
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setEditingPost(null);
-  };
-
-  const handleCloseView = () => {
-    setShowView(false);
-    setSelectedPost(null);
-  };
-
-  const handleEditFromView = () => {
-    if (selectedPost) {
-      setEditingPost(selectedPost);
-      setShowView(false);
-      setShowForm(true);
+  const handleDeletePost = (postId: number) => {
+    if (confirm('Tem certeza que deseja excluir este post?')) {
+      deleteMutation.mutate(postId);
     }
   };
 
+  const handleModalSubmit = (data: CreatePostData | UpdatePostData) => {
+    if (editingPost) {
+      updateMutation.mutate({ id: editingPost.id, data: data as UpdatePostData });
+    } else {
+      createMutation.mutate(data as CreatePostData);
+    }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1); // Reset para primeira página ao buscar
+  };
+
+  if (error) {
+    return (
+      <AppContainer>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Erro ao carregar posts</h2>
+          <p className="text-gray-600">{error.message}</p>
+        </div>
+      </AppContainer>
+    );
+  }
+
+  return (
+    <AppContainer>
+      <Header onNewPost={handleNewPost} />
+
+      <SearchBar
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+
+      <PostList
+        posts={paginatedPosts}
+        onEdit={handleEditPost}
+        onDelete={handleDeletePost}
+        isLoading={isLoading}
+      />
+
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+        />
+      )}
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingPost(null);
+        }}
+        onSubmit={handleModalSubmit}
+        post={editingPost}
+        isLoading={createMutation.isPending || updateMutation.isPending}
+      />
+    </AppContainer>
+  );
+}
+
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Curotec Posts</h1>
-                <p className="text-gray-600">Gerenciamento de posts</p>
-              </div>
-              <button
-                onClick={handleCreatePost}
-                className="btn-primary flex items-center gap-2"
-              >
-                <PlusIcon className="h-5 w-5" />
-                Novo Post
-              </button>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <PostList
-            onEditPost={handleEditPost}
-            onViewPost={handleViewPost}
-          />
-        </main>
-
-        {/* Modals */}
-        {showForm && (
-          <PostForm
-            post={editingPost || undefined}
-            onClose={handleCloseForm}
-          />
-        )}
-
-        {showView && selectedPost && (
-          <PostView
-            post={selectedPost}
-            onClose={handleCloseView}
-            onEdit={handleEditFromView}
-          />
-        )}
-      </div>
+      <BlogApp />
     </QueryClientProvider>
   );
 }
