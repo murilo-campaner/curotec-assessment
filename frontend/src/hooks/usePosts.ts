@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { postsApi } from '../services/postsApi';
+import { filterPosts } from '../utils/filters';
+import { paginateItems } from '../utils/pagination';
 
 export const usePosts = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,22 +21,19 @@ export const usePosts = () => {
     queryFn: () => postsApi.getAllPosts(),
   });
 
-  // Filter posts based on search and publication filter
-  const filteredPosts = posts.filter((post) => {
-    const matchesSearch = searchQuery === '' ||
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.content.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesPublished = publishedFilter === undefined || post.published === publishedFilter;
-
-    return matchesSearch && matchesPublished;
+  // Filter posts using utility function
+  const { filteredPosts, totalItems } = filterPosts(posts, {
+    searchQuery,
+    publishedFilter,
   });
 
-  // Pagination
-  const totalItems = filteredPosts.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + itemsPerPage);
+  // Paginate posts using utility function
+  const { paginatedItems: paginatedPosts, pagination } = paginateItems(filteredPosts, {
+    page: currentPage,
+    itemsPerPage,
+  });
+
+  const { totalPages } = pagination;
 
   // Handlers
   const handleSearchChange = (value: string) => {
