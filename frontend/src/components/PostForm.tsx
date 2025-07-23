@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import LoadingSpinner from './LoadingSpinner';
+import Button from './ui/Button';
+import Input from './ui/Input';
+import Textarea from './ui/Textarea';
 import type { Post, CreatePostData, UpdatePostData } from '../types/post';
 
 interface PostFormProps {
@@ -54,37 +56,24 @@ const PostForm: React.FC<PostFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-          Title *
-        </label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-          placeholder="Enter the post title..."
-        />
-      </div>
+      <Input
+        label="Title *"
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        required
+        placeholder="Enter the post title..."
+      />
 
-      <div>
-        <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-          Content *
-        </label>
-        <textarea
-          id="content"
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-          required
-          rows={8}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-vertical"
-          placeholder="Enter the post content..."
-        />
-      </div>
+      <Textarea
+        label="Content *"
+        name="content"
+        value={formData.content}
+        onChange={handleChange}
+        required
+        rows={8}
+        placeholder="Enter the post content..."
+      />
 
       <div className="flex items-center">
         <input
@@ -101,21 +90,21 @@ const PostForm: React.FC<PostFormProps> = ({
       </div>
 
       <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
-        <button
+        <Button
           type="button"
+          variant="secondary"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
-          disabled={isLoading || !formData.title.trim() || !formData.content.trim()}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center space-x-2"
+          variant="primary"
+          loading={isLoading}
+          disabled={!formData.title.trim() || !formData.content.trim()}
         >
-          {isLoading && <LoadingSpinner size="sm" color="white" />}
-          <span>{isLoading ? 'Saving...' : (isEditing ? 'Update' : 'Create')}</span>
-        </button>
+          {isLoading ? 'Saving...' : (isEditing ? 'Update' : 'Create')}
+        </Button>
       </div>
     </form>
   );
