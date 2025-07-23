@@ -172,7 +172,7 @@ cd frontend && npm run dev
 - **Backend API**: http://localhost:3001
 - **API Docs**: http://localhost:3001/api-docs
 
-## �� Testing Strategy
+## Testing Strategy
 
 ### Backend Testing
 ```bash
@@ -225,7 +225,7 @@ curl -X POST https://curotec-backend-production.up.railway.app/api/posts \
 curl "https://curotec-backend-production.up.railway.app/api/posts/search?query=engineering&published=true&page=1&limit=10"
 ```
 
-## �� Design System
+## Design System
 
 The project implements a consistent design system with:
 - **Component Library**: Reusable UI components with TypeScript
@@ -271,17 +271,7 @@ The project implements a consistent design system with:
 - **Image Optimization**: WebP format support
 - **Caching**: React Query for intelligent caching
 
-## �� Contributing
-
-This project demonstrates my approach to collaborative development:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'feat: add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Commit Convention
+## ♐ Commit Convention
 This project follows [Conventional Commits](https://www.conventionalcommits.org/):
 - `feat:` New features
 - `fix:` Bug fixes
@@ -311,7 +301,7 @@ As a **Senior Software Engineer**, I believe in:
 6. **Performance Awareness**: Building fast, scalable applications
 7. **Documentation**: Making code self-documenting and well-documented
 
-## �� Contact & Links
+## @ Contact & Links
 
 - **GitHub**: [https://github.com/murilo-campaner/curotec-assessment](https://github.com/murilo-campaner/curotec-assessment)
 - **LinkedIn**: https://www.linkedin.com/in/murilo-campaner
