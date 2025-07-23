@@ -1,5 +1,7 @@
+import type { PostId, SortField, SortOrder, FilterOption, PaginatedResponse, ApiResponse, DeepPartial } from './base';
+
 export interface Post {
-  id: number;
+  id: PostId;
   title: string;
   content: string;
   published: boolean;
@@ -13,41 +15,72 @@ export interface CreatePostData {
   published?: boolean;
 }
 
-export interface UpdatePostData {
-  title?: string;
-  content?: string;
-  published?: boolean;
-}
+export interface UpdatePostData extends DeepPartial<CreatePostData> {}
 
 export interface SearchParams {
   query?: string;
   page?: number;
   limit?: number;
-  sort?: 'createdAt' | 'updatedAt' | 'title';
-  order?: 'asc' | 'desc';
+  sort?: SortField;
+  order?: SortOrder;
   published?: boolean;
+  filter?: FilterOption;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
+export interface PostFilters {
+  search?: string;
+  published?: boolean;
+  filter?: FilterOption;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  error?: {
-    message: string;
-    statusCode: number;
-    timestamp: string;
-    path: string;
-  };
+export interface PostSort {
+  field: SortField;
+  order: SortOrder;
 }
+
+export interface PostPagination {
+  page: number;
+  limit: number;
+}
+
+// Tipos específicos para hooks
+export interface UsePostsOptions {
+  filters?: PostFilters;
+  sort?: PostSort;
+  pagination?: PostPagination;
+  enabled?: boolean;
+}
+
+export interface UsePostMutationsOptions {
+  onSuccess?: (data: Post) => void;
+  onError?: (error: Error) => void;
+  onSettled?: () => void;
+}
+
+// Tipos para componentes
+export interface PostCardProps {
+  post: Post;
+  onEdit?: (post: Post) => void;
+  onDelete?: (post: Post) => void;
+  className?: string;
+}
+
+export interface PostListProps {
+  posts: Post[];
+  loading?: boolean;
+  error?: Error | null;
+  onEdit?: (post: Post) => void;
+  onDelete?: (post: Post) => void;
+  className?: string;
+}
+
+export interface PostFormProps {
+  post?: Post;
+  onSubmit: (data: CreatePostData | UpdatePostData) => void;
+  onCancel: () => void;
+  loading?: boolean;
+  className?: string;
+}
+
+// Re-export tipos base
+export type { PaginatedResponse, ApiResponse };
