@@ -4,7 +4,7 @@ import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import PostList from './components/PostList';
 import Pagination from './components/Pagination';
-import Modal from './components/Modal';
+import PostModal from './components/PostModal';
 import Footer from './components/Footer';
 import { usePosts } from './hooks/usePosts';
 import { usePostMutations } from './hooks/usePostMutations';
@@ -87,7 +87,7 @@ function BlogApp() {
         />
       )}
 
-      <Modal
+      <PostModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={handleModalSubmitWrapper}
