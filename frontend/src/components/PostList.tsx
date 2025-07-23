@@ -1,5 +1,6 @@
 import React from 'react';
 import PostCard from './PostCard';
+import SkeletonLoader from './SkeletonLoader';
 import type { Post } from '../types/post';
 
 interface PostListProps {
@@ -19,15 +20,7 @@ const PostList: React.FC<PostListProps> = ({
     return (
       <div className="space-y-4">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Posts</h2>
-        <div className="animate-pulse space-y-6">
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className="border-b border-gray-200 py-6">
-              <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-            </div>
-          ))}
-        </div>
+        <SkeletonLoader count={5} />
       </div>
     );
   }
