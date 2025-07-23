@@ -225,31 +225,6 @@ curl -X POST https://curotec-backend-production.up.railway.app/api/posts \
 curl "https://curotec-backend-production.up.railway.app/api/posts/search?query=engineering&published=true&page=1&limit=10"
 ```
 
-## ��️ Project Structure
-curotec-assessment/
-├── backend/ # Node.js/Express API
-│ ├── src/
-│ │ ├── controllers/ # HTTP request handlers
-│ │ ├── services/ # Business logic layer
-│ │ ├── routes/ # Route definitions
-│ │ ├── middlewares/ # Custom middleware
-│ │ ├── types/ # TypeScript type definitions
-│ │ └── swagger.ts # API documentation config
-│ ├── prisma/ # Database schema & migrations
-│ └── tests/ # Test suites
-├── frontend/ # React application
-│ ├── src/
-│ │ ├── components/ # Reusable React components
-│ │ │ └── ui/ # Base UI components
-│ │ ├── hooks/ # Custom React hooks
-│ │ ├── services/ # API client services
-│ │ ├── types/ # TypeScript definitions
-│ │ └── utils/ # Utility functions
-│ └── tests/ # Frontend test suites
-├── docs/ # Project documentation
-├── scripts/ # Deployment scripts
-└── docker-compose.yml # Local development setup
-
 ## �� Design System
 
 The project implements a consistent design system with:
