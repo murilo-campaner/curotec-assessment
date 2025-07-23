@@ -8,14 +8,24 @@ export interface DeleteConfirmation {
   postId: number | null;
 }
 
-export const usePostMutations = () => {
+export interface UsePostMutationsOptions {
+  onSuccess?: (message: string) => void;
+  onError?: (message: string) => void;
+}
+
+export const usePostMutations = (options: UsePostMutationsOptions = {}) => {
   const queryClient = useQueryClient();
+  const { onSuccess, onError } = options;
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: postsApi.createPost,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      onSuccess?.('Post created successfully');
+    },
+    onError: (error) => {
+      onError?.(error.message || 'Failed to create post');
     },
   });
 
@@ -25,6 +35,10 @@ export const usePostMutations = () => {
       postsApi.updatePost(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      onSuccess?.('Post updated successfully');
+    },
+    onError: (error) => {
+      onError?.(error.message || 'Failed to update post');
     },
   });
 
@@ -33,6 +47,10 @@ export const usePostMutations = () => {
     mutationFn: postsApi.deletePost,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      onSuccess?.('Post deleted successfully');
+    },
+    onError: (error) => {
+      onError?.(error.message || 'Failed to delete post');
     },
   });
 

@@ -8,10 +8,12 @@ import Pagination from './components/Pagination';
 import PostModal from './components/PostModal';
 import ConfirmDialog from './components/ConfirmDialog';
 import ErrorDisplay from './components/ErrorDisplay';
+import ToastContainer from './components/Toast';
 import Footer from './components/Footer';
 import { usePosts } from './hooks/usePosts';
 import { usePostMutations } from './hooks/usePostMutations';
 import { usePostModal } from './hooks/usePostModal';
+import { useToast } from './hooks/useToast';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,8 @@ function BlogApp() {
     handleFilterChange,
   } = usePosts();
 
+  const { toasts, showToast, hideToast } = useToast();
+
   const {
     handleCreate,
     handleUpdate,
@@ -41,7 +45,10 @@ function BlogApp() {
     deleteConfirmation,
     isCreating,
     isUpdating,
-  } = usePostMutations();
+  } = usePostMutations({
+    onSuccess: (message) => showToast('success', message),
+    onError: (message) => showToast('error', message),
+  });
 
   const {
     isModalOpen,
@@ -74,58 +81,66 @@ function BlogApp() {
   }
 
   return (
-    <AppContainer>
-      <Header onNewPost={handleNewPost} />
+    <>
+      <AppContainer>
+        <Header onNewPost={handleNewPost} />
 
-      <SearchBar
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
-
-      <FilterBar
-        activeFilter={activeFilter}
-        onFilterChange={handleFilterChange}
-        className="mb-6"
-      />
-
-      <PostList
-        posts={posts}
-        onEdit={handleEditPost}
-        onDelete={handleDeleteClick}
-        isLoading={isLoading}
-      />
-
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
+        <SearchBar
+          value={searchQuery}
+          onChange={handleSearchChange}
         />
-      )}
 
-      <PostModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={handleModalSubmitWrapper}
-        post={editingPost}
-        isLoading={isCreating || isUpdating}
+        <FilterBar
+          activeFilter={activeFilter}
+          onFilterChange={handleFilterChange}
+          className="mb-6"
+        />
+
+        <PostList
+          posts={posts}
+          onEdit={handleEditPost}
+          onDelete={handleDeleteClick}
+          isLoading={isLoading}
+        />
+
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+          />
+        )}
+
+        <PostModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSubmit={handleModalSubmitWrapper}
+          post={editingPost}
+          isLoading={isCreating || isUpdating}
+        />
+
+        <ConfirmDialog
+          isOpen={deleteConfirmation.isOpen}
+          title="Delete Post"
+          message="Are you sure you want to delete this post? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+
+        <Footer />
+      </AppContainer>
+
+      <ToastContainer
+        toasts={toasts}
+        onClose={hideToast}
+        position="top-right"
       />
-
-      <ConfirmDialog
-        isOpen={deleteConfirmation.isOpen}
-        title="Delete Post"
-        message="Are you sure you want to delete this post? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
-        variant="danger"
-        onConfirm={handleDeleteConfirm}
-        onCancel={handleDeleteCancel}
-      />
-
-      <Footer />
-    </AppContainer>
+    </>
   );
 }
 
